@@ -109,9 +109,8 @@ int main()
         // (0,0) (1,0), (2,0), (3,0), (4,0)@
         //       (1,0), (2,0), (3,0), (4,0), (5,0)@
 
-        // 清除尾坐标
-        SetPos(g_snack[0].x, g_snack[0].y);
-        putchar(' ');
+        int tail_x = g_snack[0].x;
+        int tail_y = g_snack[0].y;
 
         // [0,5)
         for (int i = 0; i < g_snack_length - 1; i++)
@@ -140,6 +139,9 @@ int main()
             break;
         }
 
+        // 清除尾坐标
+        SetPos(tail_x, tail_y);
+        putchar(' ');
 
         // 绘制贪吃蛇  *****
         DrawSnack();
