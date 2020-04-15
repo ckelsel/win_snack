@@ -46,20 +46,20 @@ void DrawSnack()
 }
 
 
-void HiddenCursor()
+void HideCursor()
 {
-    HANDLE hout = GetStdHandle(STD_OUTPUT_HANDLE);
-    CONSOLE_CURSOR_INFO info;
-    GetConsoleCursorInfo(hout, &info);
-    info.bVisible = FALSE;
-    SetConsoleCursorInfo(hout, &info);
+    HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
+    CONSOLE_CURSOR_INFO CursorInfo;
+    GetConsoleCursorInfo(handle, &CursorInfo);//获取控制台光标信息
+    CursorInfo.bVisible = false; //隐藏控制台光标
+    SetConsoleCursorInfo(handle, &CursorInfo);//设置控制台光标状态
+
 }
 
 int main()
 {
     // 隐藏光标
-
-    HiddenCursor();
+    HideCursor();
 
     //[0,21)
     for (int j = 0; j < MAP_HEIGHT + 1; j++)
@@ -115,16 +115,15 @@ int main()
    
 
     
-
+    // 主循环
     while (1)
     {
         // 向右移动一格
         // (0,0) (1,0), (2,0), (3,0), (4,0)@
         //       (1,0), (2,0), (3,0), (4,0), (5,0)@
 
-        // 清除尾坐标
-        SetPos(g_snack[0].x, g_snack[0].y);
-        putchar(' ');
+        int tail_x = g_snack[0].x;
+        int tail_y = g_snack[0].y;
 
         // [0,5)
         for (int i = 0; i < g_snack_length - 1; i++)
@@ -157,18 +156,21 @@ int main()
             break;
         }
 
+        // 清除尾坐标
+        SetPos(tail_x, tail_y);
+        putchar(' ');
 
         // 绘制贪吃蛇  *****
         DrawSnack();
 
 
-        // 判断是否撞墙
+        // 贪吃蛇撞墙
         if ((g_snack[g_snack_length - 1].x == MAP_WIDTH) ||
-            (g_snack[g_snack_length - 1].y == MAP_HEIGHT) ||
             (g_snack[g_snack_length - 1].x < 0) ||
-            (g_snack[g_snack_length - 1].y < 0))
+            (g_snack[g_snack_length - 1].y < 0) ||
+            (g_snack[g_snack_length - 1].y == MAP_HEIGHT))
         {
-            // 退出while循环
+            // 退出while循环，游戏结束
             break;
         }
     }
